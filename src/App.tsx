@@ -1,11 +1,8 @@
-import React from 'react';
+import React from "react";
+import LeafLetMap from "./LeafLetMap";
 
 function App() {
-  return (
-    <div>
-
-    </div>
-  );
+  return <LeafLetMap />;
 }
 
 export default App;
