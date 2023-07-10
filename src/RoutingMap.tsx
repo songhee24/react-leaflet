@@ -1,5 +1,13 @@
+// @ts-nocheck
+
 import React, { useEffect, useState, useRef } from "react";
-import { TileLayer, MapContainer, LayersControl } from "react-leaflet";
+import {
+  TileLayer,
+  MapContainer,
+  LayersControl,
+  Marker,
+  Popup,
+} from "react-leaflet";
 
 import L from "leaflet";
 
@@ -27,6 +35,52 @@ const RoutingMap = () => {
     if (map) {
       // @ts-ignore
       RoutingMachineRef.current = L.Routing.control({
+        createMarker: function (i: any, wp: any, nWps: any) {
+          if (i === 0) {
+            return L.marker(wp.latLng, {
+              icon: L.divIcon({
+                iconSize: [30, 30],
+                iconAnchor: [30 / 2.4, 30 - 16],
+                className: "mymarker",
+                html: "<img alt='img' src='https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png' />",
+              }),
+              draggable: true,
+              keyboard: true,
+              alt: "current location",
+            }).on("drag", function (e) {
+              e.latlng.alt = "current location";
+
+              console.log("there be dragons start!!", e);
+              RoutingMachineRef.handleSetMarker({
+                ...e.oldLatLng,
+                ...e.latlng,
+              });
+            });
+          }
+          if (i === nWps - 1) {
+            return L.marker(wp.latLng, {
+              icon: L.divIcon({
+                iconSize: [30, 30],
+                iconAnchor: [30 / 2.4, 30 - 16],
+                className: "mymarker",
+                html: "<img alt='img' src='https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png' />",
+              }),
+              draggable: true,
+              alt: "current destination",
+            })
+              .on("drag", function (e) {
+                e.latlng.alt = "current destination";
+                console.log("there be dragons dest!!", e);
+                RoutingMachineRef.handleSetMarker({
+                  ...e.oldLatLng,
+                  ...e.latlng,
+                });
+              })
+              .addEventListener("click", () => {
+                alert("hello");
+              });
+          }
+        },
         position: "topleft",
         lineOptions: {
           styles: [
@@ -69,19 +123,34 @@ const RoutingMap = () => {
         center={[37.0902, -95.7129]}
         zoom={3}
         zoomControl={false}
-        style={{ height: "100vh", width: "100%", padding: 0 }}
+        style={{ height: "80vh", width: "100%", padding: 0 }}
+        className={"aza"}
         // Set the map instance to state when ready:
         // @ts-ignore
         whenReady={(map) => setMap(map.target)}
       >
-        <LayersControl position="topright">
-          <LayersControl.BaseLayer checked name="Map">
-            <TileLayer
-              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url={maps.base}
-            />
-          </LayersControl.BaseLayer>
-        </LayersControl>
+        {/*<LayersControl position="topright">*/}
+        {/*  <LayersControl.BaseLayer checked name="Map">*/}
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url={maps.base}
+        />
+        {/*<Marker*/}
+        {/*  icon={L.divIcon({*/}
+        {/*    iconSize: [30, 30],*/}
+        {/*    iconAnchor: [30 / 2.4, 30 - 16],*/}
+        {/*    className: "mymarker",*/}
+        {/*    html: "<img alt='img' src='https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png' />",*/}
+        {/*  })}*/}
+        {/*  // @ts-ignore*/}
+        {/*  position={start}*/}
+        {/*>*/}
+        {/*  <Popup>*/}
+        {/*    A pretty CSS3 popup. <br /> Easily customizable.*/}
+        {/*  </Popup>*/}
+        {/*</Marker>*/}
+        {/*  </LayersControl.BaseLayer>*/}
+        {/*</LayersControl>*/}
       </MapContainer>
     </>
   );
