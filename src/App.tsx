@@ -1,8 +1,8 @@
 import React from "react";
-import LeafLetMap from "./LeafLetMap";
+import RoutingMap from "./RoutingMap";
 
 function App() {
-  return <LeafLetMap />;
+  return <RoutingMap />;
 }
 
 export default App;
